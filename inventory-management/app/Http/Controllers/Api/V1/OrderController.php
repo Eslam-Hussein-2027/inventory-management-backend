@@ -17,9 +17,6 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of orders (Admin)
-     */
     public function index(): JsonResponse
     {
         $orders = QueryBuilder::for(Order::class)

@@ -13,9 +13,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of categories
-     */
+  
     public function index(): JsonResponse
     {
         $categories = QueryBuilder::for(Category::class)
@@ -31,20 +29,12 @@ class CategoryController extends Controller
 
         return $this->success(CategoryResource::collection($categories)->response()->getData(true));
     }
-
-    /**
-     * Store a newly created category
-     */
     public function store(StoreCategoryRequest $request): JsonResponse
     {
         $category = Category::create($request->validated());
 
         return $this->created(new CategoryResource($category), 'Category created successfully');
     }
-
-    /**
-     * Display the specified category
-     */
     public function show(Category $category): JsonResponse
     {
         $category = QueryBuilder::for(Category::where('id', $category->id))
@@ -54,20 +44,12 @@ class CategoryController extends Controller
 
         return $this->success(new CategoryResource($category));
     }
-
-    /**
-     * Update the specified category
-     */
     public function update(UpdateCategoryRequest $request, Category $category): JsonResponse
     {
         $category->update($request->validated());
 
         return $this->success(new CategoryResource($category->fresh()), 'Category updated successfully');
     }
-
-    /**
-     * Remove the specified category
-     */
     public function destroy(Category $category): JsonResponse
     {
         $category->delete();

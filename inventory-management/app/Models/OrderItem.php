@@ -18,19 +18,14 @@ class OrderItem extends Model
         'price' => 'decimal:2',
         'quantity' => 'integer',
     ];
-
-    // Relationships
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
     }
-
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
-
-    // Computed
     public function getSubtotalAttribute(): float
     {
         return $this->price * $this->quantity;

@@ -55,18 +55,10 @@ class AuthController extends Controller
             'token' => $token,
         ], 'Registration successful');
     }
-
-    /**
-     * Get authenticated user
-     */
     public function me(Request $request): JsonResponse
     {
         return $this->success(new UserResource($request->user()));
     }
-
-    /**
-     * Logout user (revoke token)
-     */
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();

@@ -14,9 +14,6 @@ use Illuminate\Http\JsonResponse;
 
 class DashboardController extends Controller
 {
-    /**
-     * Get dashboard statistics
-     */
     public function stats(): JsonResponse
     {
         $stats = [

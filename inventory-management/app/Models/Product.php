@@ -19,24 +19,18 @@ class Product extends Model
         'quantity',
         'category_id',
     ];
-
     protected $casts = [
         'price' => 'decimal:2',
         'quantity' => 'integer',
     ];
-
-    // Relationships
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
-
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
-
-    // Scopes for Query Builder
     public function scopeLowStock($query, int $threshold = 10)
     {
         return $query->where('quantity', '<=', $threshold);

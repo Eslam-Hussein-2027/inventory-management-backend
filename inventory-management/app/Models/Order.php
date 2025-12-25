@@ -25,7 +25,7 @@ class Order extends Model
         'order_date' => 'datetime',
     ];
 
-    // Relationships
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -36,7 +36,7 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    // Calculate total from items
+    
     public function calculateTotal(): float
     {
         return $this->items->sum(fn($item) => $item->price * $item->quantity);

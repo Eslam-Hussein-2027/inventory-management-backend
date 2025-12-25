@@ -14,9 +14,6 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of users
-     */
     public function index(): JsonResponse
     {
         $users = QueryBuilder::for(User::class)
@@ -32,10 +29,6 @@ class UserController extends Controller
 
         return $this->success(UserResource::collection($users)->response()->getData(true));
     }
-
-    /**
-     * Store a newly created user
-     */
     public function store(StoreUserRequest $request): JsonResponse
     {
         $user = User::create([
@@ -48,18 +41,10 @@ class UserController extends Controller
 
         return $this->created(new UserResource($user->load('roles')), 'User created successfully');
     }
-
-    /**
-     * Display the specified user
-     */
     public function show(User $user): JsonResponse
     {
         return $this->success(new UserResource($user->load('roles')));
     }
-
-    /**
-     * Update the specified user
-     */
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         $user->update([
@@ -77,10 +62,6 @@ class UserController extends Controller
 
         return $this->success(new UserResource($user->fresh()->load('roles')), 'User updated successfully');
     }
-
-    /**
-     * Remove the specified user
-     */
     public function destroy(User $user): JsonResponse
     {
         $user->delete();
