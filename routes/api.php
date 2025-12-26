@@ -76,7 +76,7 @@ Route::prefix('v1')->group(function () {
     | Admin Only Routes
     |--------------------------------------------------------------------------
     */
-    Route::middleware('permission:products.create')->group(function () {
+    Route::middleware('permission:products.create,sanctum')->group(function () {
 
       // Products - Full CRUD for Admin
       Route::apiResource('products', ProductController::class)
@@ -89,31 +89,31 @@ Route::prefix('v1')->group(function () {
       });
     });
 
-    Route::middleware('permission:categories.create')->group(function () {
+    Route::middleware('permission:categories.create,sanctum')->group(function () {
       // Categories - Full CRUD for Admin
       Route::apiResource('categories', CategoryController::class)
         ->only(['store', 'update', 'destroy']);
     });
 
-    Route::middleware('permission:suppliers.create')->group(function () {
+    Route::middleware('permission:suppliers.create,sanctum')->group(function () {
       // Suppliers - Full CRUD for Admin
       Route::apiResource('suppliers', SupplierController::class)
         ->only(['store', 'update', 'destroy']);
     });
 
-    Route::middleware('permission:users.view')->group(function () {
+    Route::middleware('permission:users.view,sanctum')->group(function () {
       // Users - Full CRUD for Admin
       Route::apiResource('users', UserController::class);
     });
 
-    Route::middleware('permission:orders.view')->group(function () {
+    Route::middleware('permission:orders.view,sanctum')->group(function () {
       // Orders - Admin can view all, update, delete
       Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
       Route::put('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
       Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
     });
 
-    Route::middleware('permission:dashboard.view')->group(function () {
+    Route::middleware('permission:dashboard.view,sanctum')->group(function () {
       // Dashboard
       Route::get('/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
     });
