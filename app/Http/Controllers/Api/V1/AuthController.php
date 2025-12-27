@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Http\Controllers\Api\V1;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+
+class AuthController extends Controller
+{
+  /**
+   * Login user and create token
+   */
+  public function login(LoginRequest $request): JsonResponse
+  {
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+      throw ValidationException::withMessages([
+        'email' => ['The provided credentials are incorrect.'],
+      ]);
+    }
+
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    return $this->success([
+      'user' => new UserResource($user),
+      'token' => $token,
+    ], 'Login successful');
+  }
+
+  /**
+   * Register new user
+   */
+  public function register(RegisterRequest $request): JsonResponse
+  {
+    $user = User::create([
+      'name' => $request->name,
+      'email' => $request->email,
+      'password' => Hash::make($request->password),
+    ]);
+
+    $user->assignRole('user');
+
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    return $this->created([
+      'user' => new UserResource($user),
+      'token' => $token,
+    ], 'Registration successful');
+  }
+
+  /**
+   * Get authenticated user
+   */
+  public function me(Request $request): JsonResponse
+  {
+    return $this->success(new UserResource($request->user()));
+  }
+
+  /**
+   * Logout user (revoke token)
+   */
+  public function logout(Request $request): JsonResponse
+  {
+    $request->user()->currentAccessToken()->delete();
+
+    return $this->success(null, 'Logged out successfully');
+  }
+
+  /**
+   * Update user profile
+   */
+  public function updateProfile(Request $request): JsonResponse
+  {
+    $request->validate([
+      'name' => 'sometimes|string|max:255',
+      'email' => 'sometimes|email|unique:users,email,' . $request->user()->id,
+    ]);
+
+    $user = $request->user();
+    $user->fill($request->only(['name', 'email']));
+    $user->save();
+
+    return $this->success(new UserResource($user), 'Profile updated successfully');
+  }
+
+  /**
+   * Change user password
+   */
+  public function changePassword(Request $request): JsonResponse
+  {
+    $request->validate([
+      'current_password' => 'required|string',
+      'new_password' => 'required|string|min:8|confirmed',
+    ]);
+
+    $user = $request->user();
+
+    if (!Hash::check($request->current_password, $user->password)) {
+      throw ValidationException::withMessages([
+        'current_password' => ['The current password is incorrect.'],
+      ]);
+    }
+
+    $user->password = Hash::make($request->new_password);
+    $user->save();
+
+    return $this->success(null, 'Password changed successfully');
+  }
+}
