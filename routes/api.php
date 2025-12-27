@@ -13,8 +13,6 @@ use App\Http\Controllers\Api\V1\DashboardController;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| API Version 1 Routes
 | Base URL: /api/v1
 |
 */

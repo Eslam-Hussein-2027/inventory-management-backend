@@ -69,6 +69,8 @@ class OrderController extends Controller
           'total_price' => 0,
           'status' => OrderStatus::PENDING,
           'order_date' => now(),
+          'address' => $request->address,
+          'notes' => $request->notes,
         ]);
 
         $totalPrice = 0;

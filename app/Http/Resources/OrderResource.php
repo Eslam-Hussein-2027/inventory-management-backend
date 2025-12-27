@@ -24,6 +24,8 @@ class OrderResource extends JsonResource
       'statusLabel' => $this->status->label(),
       'statusColor' => $this->status->color(),
       'orderDate' => $this->order_date->toISOString(),
+      'address' => $this->address,
+      'notes' => $this->notes,
       'createdAt' => $this->created_at->toISOString(),
       'updatedAt' => $this->updated_at->toISOString(),
     ];
